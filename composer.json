@@ -1,0 +1,14 @@
+{
+    "name": "jorisros/iptools",
+    "description": "A set of tools that checks and validates ipaddress.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Joris Ros",
+            "email": "joris.ros@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
