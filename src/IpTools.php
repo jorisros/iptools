@@ -25,7 +25,7 @@ class IpTools
 
         $range = self::determRange($range);
 
-        if (self::validateIp($range['low']) && self::validateIp($range['high'])) {
+        if (count($range)>1 && self::validateIp($range['low']) && self::validateIp($range['high'])) {
             if (ip2long($range['low']) < ip2long($ip) && ip2long($range['high']) > ip2long($ip)) {
                 return true;
             }
@@ -48,7 +48,14 @@ class IpTools
                     'high' => $arr[1]
                 ];
                 break;
+            case self::SEPARATION_METHOD_WILDCARD:
+                return [
+                    'low' => str_replace(self::SEPARATION_METHOD_WILDCARD, '0', $range),
+                    'high' => str_replace(self::SEPARATION_METHOD_WILDCARD, '255', $range),
+                ];
+                break;
             case self::SEPARATION_METHOD_NULL:
+                return [];
             default:
                 break;
         }
@@ -64,18 +71,16 @@ class IpTools
     {
         $pos = strpos($string, self::SEPARATION_METHOD_RANGE);
 
-        if ($pos === false) {
-            return self::SEPARATION_METHOD_NULL;
-        } else {
+        if ($pos != false) {
             return self::SEPARATION_METHOD_RANGE;
         }
 
         $pos = strpos($string, self::SEPARATION_METHOD_WILDCARD);
 
-        if ($pos === false) {
-            return self::SEPARATION_METHOD_NULL;
-        } else {
+        if ($pos != false) {
             return self::SEPARATION_METHOD_WILDCARD;
         }
+
+        return self::SEPARATION_METHOD_NULL;
     }
 }
