@@ -65,8 +65,8 @@ class IpTools
                     ];
                     break;
                 case self::SEPARATION_METHOD_NULL:
-                    $result[] = [];
                 default:
+                    $result[] = [];
                     break;
             }
         }
@@ -107,7 +107,7 @@ class IpTools
         if ($pos === false) {
             return [$range];
         } else {
-            return explode(',',$range);
+            return explode(',', $range);
         }
     }
 }
