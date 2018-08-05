@@ -1,6 +1,7 @@
 <?php
 
 require_once ('./src/IpTools.php');
+require_once(__DIR__ . '/../vendor/autoload.php');
 
 use PHPUnit\Framework\TestCase;
 
@@ -40,6 +41,7 @@ class IpTools extends TestCase
         $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.12-192.168.192.14'));
         $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.*'));
         $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.13'));
+        $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.0/24'));
         $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '10.27.1.*,192.168.192.*'));
         $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.*,10.27.1.*'));
         $this->assertFalse(\JorisRos\IpTools::isIpInRange('192.168.2.13', '192.168.192.*,10.27.1.*'));

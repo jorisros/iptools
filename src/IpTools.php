@@ -2,11 +2,14 @@
 
 namespace JorisRos;
 
+use IPv4\SubnetCalculator;
+
 class IpTools
 {
     const SEPARATION_METHOD_WILDCARD = '*';
     const SEPARATION_METHOD_RANGE = '-';
     const SEPARATION_METHOD_SINGE_IP = 'single';
+    const SEPARATION_METHOD_SUBNET = '/';
     const SEPARATION_METHOD_NULL = null;
 
     public static function validateIp(string $ipaddress) : bool
@@ -64,6 +67,16 @@ class IpTools
                         'high' => $range,
                     ];
                     break;
+                case self::SEPARATION_METHOD_SUBNET:
+                    $arr = explode('/', $range);
+                    $subnet = new SubnetCalculator($arr[0], $arr[1]);
+                    $subnetRange = $subnet->getIPAddressRange();
+
+                    $result[] = [
+                        'low' => $subnetRange[0],
+                        'high' => $subnetRange[1],
+                    ];
+                    break;
                 case self::SEPARATION_METHOD_NULL:
                 default:
                     $result[] = [];
@@ -91,6 +104,12 @@ class IpTools
 
         if ($pos != false) {
             return self::SEPARATION_METHOD_WILDCARD;
+        }
+
+        $pos = strpos($string, self::SEPARATION_METHOD_SUBNET);
+
+        if ($pos != false) {
+            return self::SEPARATION_METHOD_SUBNET;
         }
 
         if (self::validateIp($string)) {
