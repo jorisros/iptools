@@ -23,14 +23,14 @@ class IpTools
             return false;
         }
 
-        $range = self::determRange($range);
+        $ranges = self::determRange($range);
 
-        if (count($range)>1 && self::validateIp($range['low']) && self::validateIp($range['high'])) {
-            if (ip2long($range['low']) < ip2long($ip) && ip2long($range['high']) > ip2long($ip)) {
-                return true;
+        foreach ($ranges as $range) {
+            if (count($range) > 1 && self::validateIp($range['low']) && self::validateIp($range['high'])) {
+                if (ip2long($range['low']) < ip2long($ip) && ip2long($range['high']) > ip2long($ip)) {
+                    return true;
+                }
             }
-        } else {
-            return false;
         }
         return false;
     }
@@ -39,27 +39,32 @@ class IpTools
     {
         $range = self::stripAndTrimSpaces($range);
 
-        switch (self::determSeperation($range)) {
-            case self::SEPARATION_METHOD_RANGE:
-                $arr = explode(self::SEPARATION_METHOD_RANGE, $range);
+        $result = [];
 
-                return [
-                    'low' => $arr[0],
-                    'high' => $arr[1]
-                ];
-                break;
-            case self::SEPARATION_METHOD_WILDCARD:
-                return [
-                    'low' => str_replace(self::SEPARATION_METHOD_WILDCARD, '0', $range),
-                    'high' => str_replace(self::SEPARATION_METHOD_WILDCARD, '255', $range),
-                ];
-                break;
-            case self::SEPARATION_METHOD_NULL:
-                return [];
-            default:
-                break;
+        foreach (self::detectIfMultipleRanges($range) as $range) {
+            switch (self::determSeperation($range)) {
+                case self::SEPARATION_METHOD_RANGE:
+                    $arr = explode(self::SEPARATION_METHOD_RANGE, $range);
+
+                    $result[] = [
+                        'low' => $arr[0],
+                        'high' => $arr[1]
+                    ];
+                    break;
+                case self::SEPARATION_METHOD_WILDCARD:
+                    $result[] = [
+                        'low' => str_replace(self::SEPARATION_METHOD_WILDCARD, '0', $range),
+                        'high' => str_replace(self::SEPARATION_METHOD_WILDCARD, '255', $range),
+                    ];
+                    break;
+                case self::SEPARATION_METHOD_NULL:
+                    $result[] = [];
+                default:
+                    break;
+            }
         }
-        return [];
+
+        return $result;
     }
 
     public static function stripAndTrimSpaces(string $string) : string
@@ -82,5 +87,16 @@ class IpTools
         }
 
         return self::SEPARATION_METHOD_NULL;
+    }
+
+    public static function detectIfMultipleRanges($range)
+    {
+        $pos = strpos($range, ',');
+
+        if ($pos === false) {
+            return [$range];
+        } else {
+            return explode(',',$range);
+        }
     }
 }
