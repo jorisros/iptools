@@ -6,6 +6,7 @@ class IpTools
 {
     const SEPARATION_METHOD_WILDCARD = '*';
     const SEPARATION_METHOD_RANGE = '-';
+    const SEPARATION_METHOD_SINGE_IP = 'single';
     const SEPARATION_METHOD_NULL = null;
 
     public static function validateIp(string $ipaddress) : bool
@@ -27,7 +28,7 @@ class IpTools
 
         foreach ($ranges as $range) {
             if (count($range) > 1 && self::validateIp($range['low']) && self::validateIp($range['high'])) {
-                if (ip2long($range['low']) < ip2long($ip) && ip2long($range['high']) > ip2long($ip)) {
+                if (ip2long($range['low']) <= ip2long($ip) && ip2long($range['high']) >= ip2long($ip)) {
                     return true;
                 }
             }
@@ -57,6 +58,12 @@ class IpTools
                         'high' => str_replace(self::SEPARATION_METHOD_WILDCARD, '255', $range),
                     ];
                     break;
+                case self::SEPARATION_METHOD_SINGE_IP:
+                    $result[] = [
+                        'low' => $range,
+                        'high' => $range,
+                    ];
+                    break;
                 case self::SEPARATION_METHOD_NULL:
                     $result[] = [];
                 default:
@@ -84,6 +91,10 @@ class IpTools
 
         if ($pos != false) {
             return self::SEPARATION_METHOD_WILDCARD;
+        }
+
+        if (self::validateIp($string)) {
+            return self::SEPARATION_METHOD_SINGE_IP;
         }
 
         return self::SEPARATION_METHOD_NULL;

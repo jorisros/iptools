@@ -39,6 +39,10 @@ class IpTools extends TestCase
         $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '10.27.1.10-10.27.1.16,192.168.192.0 - 192.168.192.255'));
         $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.12-192.168.192.14'));
         $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.*'));
+        $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.13'));
+        $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '10.27.1.*,192.168.192.*'));
+        $this->assertTrue(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.*,10.27.1.*'));
+        $this->assertFalse(\JorisRos\IpTools::isIpInRange('192.168.2.13', '192.168.192.*,10.27.1.*'));
         $this->assertFalse(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.14-192.168.192.255'));
         $this->assertFalse(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.10-192.168.192.12'));
     }
