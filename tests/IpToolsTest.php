@@ -3,9 +3,10 @@
 require_once ('./src/IpTools.php');
 require_once(__DIR__ . '/../vendor/autoload.php');
 
+use JorisRos\IpTools;
 use PHPUnit\Framework\TestCase;
 
-class IpTools extends TestCase
+class IpToolsTest extends TestCase
 {
     public function testValidateIpAddress()
     {
@@ -19,15 +20,18 @@ class IpTools extends TestCase
 
     public function testDetermRange()
     {
-        $range = \JorisRos\IpTools::determRange('127.0.0.1 - 127.0.0.255');
+        $method = new ReflectionMethod('\JorisRos\IpTools', 'determRange');
+        $method->setAccessible(true);
+
+        $range = $method->invoke(new JorisRos\IpTools, '127.0.0.1 - 127.0.0.255');
         $this->assertEquals('127.0.0.1', $range[0]['low']);
         $this->assertEquals('127.0.0.255', $range[0]['high']);
 
-        $range = \JorisRos\IpTools::determRange('127.0.0.1-127.0.0.255');
+        $range = $method->invoke(new JorisRos\IpTools, '127.0.0.1-127.0.0.255');
         $this->assertEquals('127.0.0.1', $range[0]['low']);
         $this->assertEquals('127.0.0.255', $range[0]['high']);
 
-        $range = \JorisRos\IpTools::determRange(' 127.0.0.1 - 127.0.0.255 ');
+        $range = $method->invoke(new JorisRos\IpTools, ' 127.0.0.1 - 127.0.0.255 ');
         $this->assertEquals('127.0.0.1', $range[0]['low']);
         $this->assertEquals('127.0.0.255', $range[0]['high']);
     }
@@ -53,27 +57,30 @@ class IpTools extends TestCase
 
     public function testDetectIfMultipleRanges()
     {
-        $r = \JorisRos\IpTools::detectIfMultipleRanges('192.168.192.0-192.168.192.255,192.168.192.0-192.168.192.255');
-        $this->assertEquals(2, count($r));
 
-        $r = \JorisRos\IpTools::detectIfMultipleRanges('192.168.192.0-192.168.192.255');
-        $this->assertEquals(1, count($r));
+        $method = new ReflectionMethod('\JorisRos\IpTools', 'detectIfMultipleRanges');
+        $method->setAccessible(true);
+
+        $this->assertEquals(2, count($method->invoke(new JorisRos\IpTools, '192.168.192.0-192.168.192.255,192.168.192.0-192.168.192.255')));
+        $this->assertEquals(1, count($method->invoke(new JorisRos\IpTools, '192.168.192.0-192.168.192.255')));
+
     }
 
     public function testStripAndTrimSpaces()
     {
-        $string = \JorisRos\IpTools::stripAndTrimSpaces('    ');
-        $this->assertEquals(0, strlen($string));
-
-        $string = \JorisRos\IpTools::stripAndTrimSpaces(' - ');
-        $this->assertEquals(1, strlen($string));
-
-        $string = \JorisRos\IpTools::stripAndTrimSpaces(' A - B ');
-        $this->assertEquals(3, strlen($string));
+        $method = new ReflectionMethod('\JorisRos\IpTools', 'stripAndTrimSpaces');
+        $method->setAccessible(true);
+        
+        $this->assertEquals(0, strlen($method->invoke(new JorisRos\IpTools, '    ')));
+        $this->assertEquals(1, strlen($method->invoke(new JorisRos\IpTools, ' - ')));
+        $this->assertEquals(3, strlen($method->invoke(new JorisRos\IpTools, ' A - B ')));
     }
 
     public function testDetermSeperation()
     {
-        $this->assertEquals(\JorisRos\IpTools::SEPARATION_METHOD_RANGE, \JorisRos\IpTools::determSeperation('A-B'));
+        $method = new ReflectionMethod('\JorisRos\IpTools', 'determSeperation');
+        $method->setAccessible(true);
+
+        $this->assertEquals(\JorisRos\IpTools::SEPARATION_METHOD_RANGE, $method->invoke(new JorisRos\IpTools, 'A-B'));
     }
 }
