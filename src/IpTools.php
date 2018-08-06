@@ -39,7 +39,7 @@ class IpTools
         return false;
     }
 
-    public static function determRange($range) : array
+    private static function determRange($range) : array
     {
         $range = self::stripAndTrimSpaces($range);
 
@@ -87,12 +87,12 @@ class IpTools
         return $result;
     }
 
-    public static function stripAndTrimSpaces(string $string) : string
+    private static function stripAndTrimSpaces(string $string) : string
     {
         return trim(str_replace(' ', '', $string));
     }
 
-    public static function determSeperation($string) : string
+    private static function determSeperation($string) : string
     {
         $pos = strpos($string, self::SEPARATION_METHOD_RANGE);
 
@@ -119,7 +119,7 @@ class IpTools
         return self::SEPARATION_METHOD_NULL;
     }
 
-    public static function detectIfMultipleRanges($range)
+    private static function detectIfMultipleRanges($range)
     {
         $pos = strpos($range, ',');
 
