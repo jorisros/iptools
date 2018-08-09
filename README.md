@@ -16,7 +16,7 @@ Detects if ipaddress is allowed in given range, by a wildcard sign:
 \JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.*,192.168.192.*');
 ```
 
-Detects if ipaddress is allowed in given range, by a subnetn:
+Detects if ipaddress is allowed in given range, by a subnet:
 ```php
 \JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.0/24');
 ```
