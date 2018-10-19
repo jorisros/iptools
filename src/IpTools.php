@@ -48,11 +48,12 @@ class IpTools
         foreach (self::detectIfMultipleRanges($range) as $range) {
             switch (self::determSeperation($range)) {
                 case self::SEPARATION_METHOD_RANGE:
-                    $arr = explode(self::SEPARATION_METHOD_RANGE, $range);
+
+                    list($low, $high) = explode(self::SEPARATION_METHOD_RANGE, $range);
 
                     $result[] = [
-                        'low' => $arr[0],
-                        'high' => $arr[1]
+                        'low' => $low,
+                        'high' => $high
                     ];
                     break;
                 case self::SEPARATION_METHOD_WILDCARD:
@@ -68,13 +69,14 @@ class IpTools
                     ];
                     break;
                 case self::SEPARATION_METHOD_SUBNET:
-                    $arr = explode('/', $range);
-                    $subnet = new SubnetCalculator($arr[0], $arr[1]);
-                    $subnetRange = $subnet->getIPAddressRange();
+                    list($ipRange, $domain) = explode('/', $range);
+
+                    $subnet = new SubnetCalculator($ipRange, $domain);
+                    list($low, $high) = $subnet->getIPAddressRange();
 
                     $result[] = [
-                        'low' => $subnetRange[0],
-                        'high' => $subnetRange[1],
+                        'low' => $low,
+                        'high' => $high,
                     ];
                     break;
                 case self::SEPARATION_METHOD_NULL:
