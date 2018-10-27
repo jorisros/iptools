@@ -30,8 +30,7 @@ class IpTools
         $ranges = self::determRange($range);
 
         foreach ($ranges as $range) {
-            if (self::isRangeValidAndBetween($ip, $range))
-            {
+            if (self::isRangeValidAndBetween($ip, $range)) {
                 return true;
             }
         }
@@ -48,36 +47,16 @@ class IpTools
         foreach (self::detectIfMultipleRanges($range) as $range) {
             switch (self::determSeperation($range)) {
                 case self::SEPARATION_METHOD_RANGE:
-
-                    list($low, $high) = explode(self::SEPARATION_METHOD_RANGE, $range);
-
-                    $result[] = [
-                        'low' => $low,
-                        'high' => $high
-                    ];
+                    $result[] = IpToolsSeparation::methodRange($range);
                     break;
                 case self::SEPARATION_METHOD_WILDCARD:
-                    $result[] = [
-                        'low' => str_replace(self::SEPARATION_METHOD_WILDCARD, '0', $range),
-                        'high' => str_replace(self::SEPARATION_METHOD_WILDCARD, '255', $range),
-                    ];
+                    $result[] = IpToolsSeparation::methodWildcard($range);
                     break;
                 case self::SEPARATION_METHOD_SINGE_IP:
-                    $result[] = [
-                        'low' => $range,
-                        'high' => $range,
-                    ];
+                    $result[] = IpToolsSeparation::methodSingleIp($range);
                     break;
                 case self::SEPARATION_METHOD_SUBNET:
-                    list($ipRange, $domain) = explode('/', $range);
-
-                    $subnet = new SubnetCalculator($ipRange, $domain);
-                    list($low, $high) = $subnet->getIPAddressRange();
-
-                    $result[] = [
-                        'low' => $low,
-                        'high' => $high,
-                    ];
+                    $result[] = IpToolsSeparation::methodSubnet($range);
                     break;
                 case self::SEPARATION_METHOD_NULL:
                 default:
