@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/jorisros/iptools.svg?branch=master)](https://travis-ci.org/jorisros/iptools)
+
 # Iptools
 A set of tools that checks and validates ipaddress.
 
