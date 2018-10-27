@@ -96,29 +96,31 @@ class IpTools
 
     private static function determSeperation($string) : string
     {
+        $method = self::SEPARATION_METHOD_NULL;
+        
         $pos = strpos($string, self::SEPARATION_METHOD_RANGE);
 
         if ($pos != false) {
-            return self::SEPARATION_METHOD_RANGE;
+            $method = self::SEPARATION_METHOD_RANGE;
         }
 
         $pos = strpos($string, self::SEPARATION_METHOD_WILDCARD);
 
         if ($pos != false) {
-            return self::SEPARATION_METHOD_WILDCARD;
+            $method = self::SEPARATION_METHOD_WILDCARD;
         }
 
         $pos = strpos($string, self::SEPARATION_METHOD_SUBNET);
 
         if ($pos != false) {
-            return self::SEPARATION_METHOD_SUBNET;
+            $method = self::SEPARATION_METHOD_SUBNET;
         }
 
         if (self::validateIp($string)) {
-            return self::SEPARATION_METHOD_SINGE_IP;
+            $method = self::SEPARATION_METHOD_SINGE_IP;
         }
 
-        return self::SEPARATION_METHOD_NULL;
+        return $method;
     }
 
     private static function detectIfMultipleRanges($range)
