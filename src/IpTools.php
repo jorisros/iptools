@@ -12,7 +12,7 @@ class IpTools
     const SEPARATION_METHOD_SUBNET = '/';
     const SEPARATION_METHOD_NULL = null;
 
-    public static function validateIp(string $ipaddress) : bool
+    public static function validateIp(string $ipaddress): bool
     {
         if (filter_var($ipaddress, FILTER_VALIDATE_IP)) {
             return true;
@@ -21,7 +21,7 @@ class IpTools
         }
     }
 
-    public static function isIpInRange($ip, $range) : bool
+    public static function isIpInRange($ip, $range): bool
     {
         if (!self::validateIp($ip)) {
             return false;
@@ -30,16 +30,16 @@ class IpTools
         $ranges = self::determRange($range);
 
         foreach ($ranges as $range) {
-            if (count($range) > 1 && self::validateIp($range['low']) && self::validateIp($range['high'])) {
-                if (ip2long($range['low']) <= ip2long($ip) && ip2long($range['high']) >= ip2long($ip)) {
-                    return true;
-                }
+            if (self::isRangeValidAndBetween($ip, $range))
+            {
+                return true;
             }
         }
+
         return false;
     }
 
-    private static function determRange($range) : array
+    private static function determRange($range): array
     {
         $range = self::stripAndTrimSpaces($range);
 
@@ -89,15 +89,27 @@ class IpTools
         return $result;
     }
 
-    private static function stripAndTrimSpaces(string $string) : string
+
+    private static function isRangeValidAndBetween(string $ip, array $range): bool
+    {
+        if (count($range) > 1 && self::validateIp($range['low']) && self::validateIp($range['high'])) {
+            if (ip2long($range['low']) <= ip2long($ip) && ip2long($range['high']) >= ip2long($ip)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static function stripAndTrimSpaces(string $string): string
     {
         return trim(str_replace(' ', '', $string));
     }
 
-    private static function determSeperation($string) : string
+    private static function determSeperation($string): string
     {
         $method = self::SEPARATION_METHOD_NULL;
-        
+
         $pos = strpos($string, self::SEPARATION_METHOD_RANGE);
 
         if ($pos != false) {
