@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/jorisros/iptools.svg?branch=master)](https://travis-ci.org/jorisros/iptools)
+[![Maintainability](https://api.codeclimate.com/v1/badges/6509bedcbd5997b6db0e/maintainability)](https://codeclimate.com/github/jorisros/iptools/maintainability)
 
 # Iptools
 A set of tools that checks and validates ipaddress.
