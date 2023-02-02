@@ -89,9 +89,21 @@ class IpTools
 
     private static function isRangeValidAndBetween(string $ip, array $range): bool
     {
-        if (count($range) > 1 && self::validateIp($range['low']) && self::validateIp($range['high'])) {
-            if (ip2long($range['low']) <= ip2long($ip) && ip2long($range['high']) >= ip2long($ip)) {
-                return true;
+        if (self::isIpv4($ip)) {
+            if (count($range) > 1 && self::validateIp($range['low']) && self::validateIp($range['high'])) {
+                if (ip2long($range['low']) <= ip2long($ip) && ip2long($range['high']) >= ip2long($ip)) {
+                    return true;
+                }
+            }
+        }
+
+        if (self::isIpv6($ip)) {
+            if (count($range) > 1 && self::validateIp($range['low']) && self::validateIp($range['high'])) {
+                if (
+                    (IpToolsHelpers::ip2long_v6($range['low']) <= IpToolsHelpers::ip2long_v6($ip)) &&
+                    (IpToolsHelpers::ip2long_v6($range['high']) >= IpToolsHelpers::ip2long_v6($ip))) {
+                    return true;
+                }
             }
         }
 

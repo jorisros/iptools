@@ -69,6 +69,13 @@ class IpToolsTest extends TestCase
         $this->assertFalse(\JorisRos\IpTools::isIpInRange('192.168.192.13', '192.168.192.10-192.168.192.12'));
     }
 
+    public function testIsIpV6InRange()
+    {
+        $this->assertTrue(\JorisRos\IpTools::isIpInRange('2001:1c02:c1e:b00:f92d:122a:680e:3443', '2001:1c02:c1e:b00:f92d:122a:680e:3443'));
+        $this->assertTrue(\JorisRos\IpTools::isIpInRange('2001:1c02:c1e:b00:f92d:122a:680e:3443', '2001:1c02:c1e:b00:f92d:122a:680e:3443,192.168.192.13'));
+    }
+
+
     public function testDetectIfMultipleRanges()
     {
 
