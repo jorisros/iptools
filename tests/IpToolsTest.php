@@ -17,6 +17,21 @@ class IpToolsTest extends TestCase
         $this->assertFalse(\JorisRos\IpTools::validateIp('ipaddress'));
     }
 
+    public function testValidationIpAddressV6()
+    {
+        $this->assertTrue(\JorisRos\IpTools::validateIp('2234:0000:0000:6904:0019:d2ff:feb3:5e4f'));
+        $this->assertTrue(\JorisRos\IpTools::validateIp('0000:0000:0000:0000:0000:0000:0000:0001'));
+        $this->assertTrue(\JorisRos\IpTools::validateIp('::1'));
+    }
+
+    public function testTypeOfIpAddress()
+    {
+        $this->assertTrue(\JorisRos\IpTools::isIpv4('127.0.0.1'));
+        $this->assertFalse(\JorisRos\IpTools::isIpv4('2234:0000:0000:6904:0019:d2ff:feb3:5e4f'));
+        $this->assertFalse(\JorisRos\IpTools::isIpv6('127.0.0.1'));
+        $this->assertTrue(\JorisRos\IpTools::isIpv6('2234:0000:0000:6904:0019:d2ff:feb3:5e4f'));
+    }
+
     public function testDetermRange()
     {
         $method = new ReflectionMethod('\JorisRos\IpTools', 'determRange');

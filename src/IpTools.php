@@ -16,9 +16,27 @@ class IpTools
     {
         if (filter_var($ipaddress, FILTER_VALIDATE_IP)) {
             return true;
-        } else {
-            return false;
         }
+
+        return false;
+    }
+
+    public static function isIpv6(string $ipaddress): bool
+    {
+        if(filter_var($ipaddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function isIpv4(string $ipaddress): bool
+    {
+        if(filter_var($ipaddress, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            return true;
+        }
+
+        return false;
     }
 
     public static function isIpInRange($ip, $range): bool
